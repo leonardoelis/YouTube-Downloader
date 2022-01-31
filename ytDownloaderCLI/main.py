@@ -1,5 +1,4 @@
-from youtube_downloader import YoutubeDownloader
+from youtube_downloader_cli import YoutubeDownloaderCLI
 
 if __name__ == '__main__':
-    yt_downloader = YoutubeDownloader()
-    yt_downloader.downloadVideo()
+    yt_downloader_cli = YoutubeDownloaderCLI()

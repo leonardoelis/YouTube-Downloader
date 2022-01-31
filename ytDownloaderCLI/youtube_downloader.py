@@ -1,31 +1,38 @@
 from pytube import YouTube
 import sys
+import os
+from pathlib import Path
 
 class YoutubeDownloader:
 
-    def __init__(self):
-        pass
+    def __init__(self, link, resolution):
+        self.__link = link
+        self.__resolution = resolution
 
     def downloadVideo(self):
-        SAVE_PATH = "C:\\Users\\leona\\Downloads"
-
-        link = 'https://www.youtube.com/watch?v=mpWVjiFUihc'
+        # Salva o vídeo na pasta de Downloads
+        SAVE_PATH = os.path.join(Path.home(), 'Downloads')
 
         try:
-            yt = YouTube(link)
-        except:
-            print('Connection Error!')
+            yt = YouTube(self.__link)
+        except Exception as error:
+            print('Error: {}'.format(error))
+            sys.exit()
 
-        mp4files = yt.streams
-        print(mp4files)
+        files = yt.streams
+        #print(files)
 
-        files = mp4files.filter(file_extension='mp4', progressive=True)
+        mp4files = files.filter(file_extension='mp4', progressive=True)
 
-        file = files.get_by_resolution('720p')
+        if self.__resolution:
+            file = mp4files.get_by_resolution(self.__resolution)
+        else:
+            file = mp4files.get_highest_resolution()
+
         print(file)
         try:
             file.download(SAVE_PATH)
-        except Exception as e:
-            print('Error: {}'.format(e))
+        except Exception as error:
+            print('Resolution not available for this video')
             sys.exit()
-        print('Video downloaded successfully!')
+        print(f'The video {file.title} was downloaded successfully!')
